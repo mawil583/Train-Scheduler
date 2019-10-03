@@ -47,20 +47,20 @@ $(document).ready(function () {
     console.log(childSnapshot.val().destination);
     console.log(childSnapshot.val().frequency);
     console.log(childSnapshot.val().first_train_time);
-    let nextArrivalArr = childSnapshot.val().first_train_time.split(":");
-    console.log(nextArrivalArr);
-    let nextArrival = moment().hours(nextArrivalArr[0]).minutes(nextArrivalArr[1]);
-    console.log(nextArrival)
-    // moment.max takes two arguments- moment() and nextArrival. 
-    // It takes nextArrival time and subtracts from it the current time
-    let nextArrivalMax = moment.max(moment(), nextArrival);
+    let firstTrainTimeSplitArr = childSnapshot.val().first_train_time.split(":");
+    console.log(firstTrainTimeSplitArr);
+    let firstTrainTimeFormatted = moment().hours(firstTrainTimeSplitArr[0]).minutes(firstTrainTimeSplitArr[1]).subtract(1, "years");
+    // console.log(nextArrival)
+    // moment.max takes two arguments- moment() and firstTrainTimeFormatted. 
+    // It takes firstTrainTimeFormatted time and subtracts from it the current time
+    let nextArrivalMax = moment.max(moment(), firstTrainTimeFormatted);
     let trainArrival;
     let trainMin;
-    if (nextArrivalMax == nextArrival) {
-      trainArrival = nextArrival.format("hh:mm A");
-      trainMin = nextArrival.diff(moment(), "minutes");
+    if (nextArrivalMax == firstTrainTimeFormatted) {
+      trainArrival = firstTrainTimeFormatted.format("hh:mm A");
+      trainMin = firstTrainTimeFormatted.diff(moment(), "minutes");
     } else {
-      var diffTime = moment().diff(nextArrival, "minutes");
+      var diffTime = moment().diff(firstTrainTimeFormatted, "minutes");
       var timeRemainder = diffTime % childSnapshot.val().frequency;
       trainMin = childSnapshot.val().frequency - timeRemainder;
       trainArrival = moment().add(trainMin, "m").format("hh:mm A")
