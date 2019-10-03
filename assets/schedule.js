@@ -40,7 +40,7 @@ $(document).ready(function () {
       trainInfo
     )
   });
-  // let nextArrival = 
+  
 
   database.ref().on("child_added", function (childSnapshot) {
     console.log(childSnapshot.val().train_name);
