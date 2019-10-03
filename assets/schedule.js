@@ -19,12 +19,15 @@ $(document).ready(function () {
   let destination = "";
   let frequency = 0;
   let firstTrainTime = 0;
+  let duplicateTrackerArr = []
 
   $(document).on("click", ".btn", function (event) {
     event.preventDefault();
 
-    trainName = $("#trainName").val().trim();
-    destination = $("#destination").val().trim();
+
+
+    trainName = $("#trainName").val().charAt(0).toUpperCase().trim() + $("#trainName").val().slice(1).trim();
+    destination = $("#destination").val().charAt(0).toUpperCase().trim() + $("#destination").val().slice(1).trim();
     frequency = $("#frequency").val().trim();
     firstTrainTime = $("#firstTrainTime").val().trim();
     console.log(frequency);
@@ -36,9 +39,22 @@ $(document).ready(function () {
       first_train_time: firstTrainTime,
       frequency: frequency
     }
-    database.ref().push(
-      trainInfo
-    )
+
+    // debugger;
+    if (duplicateTrackerArr.indexOf(trainInfo) === -1) {
+      console.log(duplicateTrackerArr.indexOf(trainInfo))
+
+      // This holds onto user input so that I can reference it later 
+      // to ensure no duplicate entries
+      duplicateTrackerArr.push(trainInfo);
+
+      console.log(duplicateTrackerArr)
+      
+      
+      database.ref().push(
+        trainInfo
+        )
+      }
   });
   
 
@@ -47,9 +63,10 @@ $(document).ready(function () {
     console.log(childSnapshot.val().destination);
     console.log(childSnapshot.val().frequency);
     console.log(childSnapshot.val().first_train_time);
-    let firstTrainTimeSplitArr = childSnapshot.val().first_train_time.split(":");
-    console.log(firstTrainTimeSplitArr);
-    let firstTrainTimeFormatted = moment().hours(firstTrainTimeSplitArr[0]).minutes(firstTrainTimeSplitArr[1]).subtract(1, "years");
+    // let firstTrainTimeSplitArr = childSnapshot.val().first_train_time.split(":");
+    // console.log(firstTrainTimeSplitArr);
+    let firstTrainTimeFormatted = moment(childSnapshot.val().first_train_time, "HH:mm").subtract(1, "years");
+    // let firstTrainTimeFormatted = moment().hours(firstTrainTimeSplitArr[0]).minutes(firstTrainTimeSplitArr[1]).subtract(1, "years");
     // console.log(nextArrival)
     // moment.max takes two arguments- moment() and firstTrainTimeFormatted. 
     // It takes firstTrainTimeFormatted time and subtracts from it the current time
@@ -65,6 +82,9 @@ $(document).ready(function () {
       trainMin = childSnapshot.val().frequency - timeRemainder;
       trainArrival = moment().add(trainMin, "m").format("hh:mm A")
     }
+
+    // if (duplicateTrackerArr.includes())
+
     let row = $("<tr>");
     let tableData = $(
       "<td>" + childSnapshot.val().train_name + "</td>" +
