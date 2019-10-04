@@ -23,14 +23,16 @@ $(document).ready(function () {
 
   $(document).on("click", ".btn", function (event) {
     event.preventDefault();
-
-
-
     trainName = $("#trainName").val().split(" ").map((s) => s.charAt(0).toUpperCase().trim() + s.substring(1).trim()).join(" ");
     destination = $("#destination").val().split(" ").map((s) => s.charAt(0).toUpperCase().trim() + s.substring(1).trim()).join(" ");
     frequency = $("#frequency").val().trim();
     firstTrainTime = $("#firstTrainTime").val().trim();
     console.log(frequency);
+
+    $("#trainName").val("");
+    $("#destination").val("");
+    $("#frequency").val("");
+    $("#firstTrainTime").val("");
 
     let trainInfo =
     {
@@ -72,12 +74,17 @@ $(document).ready(function () {
     // console.log(nextArrival)
     // moment.max takes two arguments- moment() and firstTrainTimeFormatted. 
     // It takes firstTrainTimeFormatted time and subtracts from it the current time
+    // has the train started yet? is the current time before or after the train departure time? 
+    // 
     let nextArrivalMax = moment.max(moment(), firstTrainTimeFormatted);
+    console.log(moment.max(moment(), firstTrainTimeFormatted));
     let trainArrival;
     let trainMin;
+    // if the first train is later than the current time, set trainarrivaltime to the first train time
     if (nextArrivalMax == firstTrainTimeFormatted) {
       trainArrival = firstTrainTimeFormatted.format("hh:mm A");
       trainMin = firstTrainTimeFormatted.diff(moment(), "minutes");
+      // 
     } else {
       var diffTime = moment().diff(firstTrainTimeFormatted, "minutes");
       var timeRemainder = diffTime % childSnapshot.val().frequency;
