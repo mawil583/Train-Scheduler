@@ -41,7 +41,9 @@ $(document).ready(function () {
     }
 
     // debugger;
-    if (duplicateTrackerArr.indexOf(trainInfo) === -1) {
+    if (duplicateTrackerArr.findIndex((obj) => {
+      return obj.train_name === trainInfo.train_name && obj.destination === trainInfo.destination && obj.first_train_time === trainInfo.first_train_time && obj.frequency === trainInfo.frequency
+    }) === -1) {
       console.log(duplicateTrackerArr.indexOf(trainInfo))
 
       // This holds onto user input so that I can reference it later 
@@ -49,14 +51,14 @@ $(document).ready(function () {
       duplicateTrackerArr.push(trainInfo);
 
       console.log(duplicateTrackerArr)
-      
-      
+
+
       database.ref().push(
         trainInfo
-        )
-      }
+      )
+    }
   });
-  
+
 
   database.ref().on("child_added", function (childSnapshot) {
     console.log(childSnapshot.val().train_name);
