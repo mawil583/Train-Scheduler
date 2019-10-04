@@ -26,8 +26,8 @@ $(document).ready(function () {
 
 
 
-    trainName = $("#trainName").val().charAt(0).toUpperCase().trim() + $("#trainName").val().slice(1).trim();
-    destination = $("#destination").val().charAt(0).toUpperCase().trim() + $("#destination").val().slice(1).trim();
+    trainName = $("#trainName").val().split(" ").map((s) => s.charAt(0).toUpperCase().trim() + s.substring(1).trim()).join(" ");
+    destination = $("#destination").val().split(" ").map((s) => s.charAt(0).toUpperCase().trim() + s.substring(1).trim()).join(" ");
     frequency = $("#frequency").val().trim();
     firstTrainTime = $("#firstTrainTime").val().trim();
     console.log(frequency);
